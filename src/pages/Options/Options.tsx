@@ -9,12 +9,12 @@ interface Props {
 
 const Options: React.FC<Props> = ({ title }: Props) => {
   return (
-      <div className="h-screen bg-primary text-white">
+      <div className={`h-screen bg-primary text-white`}>
         <div className="md:flex items-center justify-center h-full">
-            <div className="max-w-3xl w-full bg-secondary px-4 py-2 rounded-md shadow-lg">
-                <div className="py-2 border-b border-gray-200">
+            <div className="max-w-4xl w-full bg-secondary p-4 rounded-md shadow-lg">
+                <div className="pb-2 border-b border-gray-200">
                     <h1 className="text-2xl font-semibold tracking-wide">
-                        {title} Page
+                        {title}
                     </h1>
                 </div>
 
