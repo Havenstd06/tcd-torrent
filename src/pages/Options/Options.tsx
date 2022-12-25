@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, FC} from 'react';
 
 import Label from '../../Components/Label';
 import Input from '../../Components/Input';
@@ -7,7 +7,7 @@ interface Props {
   title: string;
 }
 
-const Options: React.FC<Props> = ({ title }: Props) => {
+const Options: FC<Props> = ({ title }: Props) => {
   return (
       <div className={`h-screen bg-primary text-white`}>
         <div className="md:flex items-center justify-center h-full">
@@ -42,7 +42,7 @@ const Trackers: Function = () => {
 }
 
 const Yggtorrent: Function = () => {
-    const [yggPasskey, setYggPasskey] = React.useState<string>('');
+    const [yggPasskey, setYggPasskey] = useState<string>('');
     const handleYggPasskeyChange: Function = (value: string) => {
         if (! value && value.length <= 0) {
             return;
@@ -53,7 +53,7 @@ const Yggtorrent: Function = () => {
         });
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         chrome.storage.sync.get(['yggPasskey'], (result) => {
             setYggPasskey(result.yggPasskey);
         });
@@ -93,109 +93,54 @@ const Clients: Function = () => {
                 Clients
             </h2>
 
-            <QBitorrent />
+            <QBittorrent />
         </div>
     )
 }
 
-const QBitorrent: Function = () => {
-    const [qbHost, setQbHost] = React.useState('');
-    const [qbPort, setQbPort] = React.useState('');
-    const [qbUsername, setQbUsername] = React.useState('');
-    const [qbPassword, setQbPassword] = React.useState('');
-
-    const handleQbHostChange: Function = (value: string) => {
-        if (! value && value.length <= 0) {
-            return;
-        }
-
-        chrome.storage.sync.set({ qbHost: value }, () => {
-            setQbHost(value);
-        });
-    }
-
-    const handleQbPortChange: Function = (value: string) => {
-        if (! value && value.length <= 0) {
-            return;
-        }
-
-        chrome.storage.sync.set({ qbPort: value }, () => {
-            setQbPort(value);
-        });
-    }
-
-    const handleQbUsernameChange: Function = (value: string) => {
-        if (! value && value.length <= 0) {
-            return;
-        }
-
-        chrome.storage.sync.set({ qbUsername: value }, () => {
-            setQbUsername(value);
-        });
-    }
-
-    const handleQbPasswordChange: Function = (value: string) => {
-        if (! value && value.length <= 0) {
-            return;
-        }
-
-        chrome.storage.sync.set({ qbPassword: value }, () => {
-            setQbPassword(value);
-        });
-    }
-
-    React.useEffect(() => {
-        chrome.storage.sync.get(['qbHost'], (result) => {
-            setQbHost(result.qbHost);
+const QBittorrent: Function = () => {
+    const [qbCreds, setQbCreds] = useState({
+            "host": '',
+            "username": '',
+            "password": '',
         });
 
-        chrome.storage.sync.get(['qbPort'], (result) => {
-            setQbPort(result.qbPort);
-        });
-
-        chrome.storage.sync.get(['qbUsername'], (result) => {
-            setQbUsername(result.qbUsername);
-        });
-
-        chrome.storage.sync.get(['qbPassword'], (result) => {
-            setQbPassword(result.qbPassword);
+    useEffect(() => {
+        chrome.storage.sync.get(['qbCreds'], (result) => {
+            if (result.qbCreds.host || result.qbCreds.username || result.qbCreds.password) {
+                setQbCreds(result.qbCreds);
+            }
         });
     }, []);
+
+    useEffect(() => {
+        chrome.storage.sync.set({ qbCreds: qbCreds }, () => {
+            // console.log('updated qbCreds');
+        });
+    }, [qbCreds]);
 
     return (
         <div>
             <h4 className="text-lg font-medium mt-2">
-                QBitorrent
+                qBittorrent
             </h4>
 
             <div className="my-2">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="md:col-span-3">
+                    <div className="md:col-span-2">
                         <Label htmlFor="ip">
-                            IP
+                            Host (Domain or IP:Port) (Must be HTTPS)
                         </Label>
                         <Input
                             className="mt-2"
                             name="ip"
                             type="text"
-                            placeholder="Client IP"
-                            onChange={handleQbHostChange}
-                            value={qbHost}
+                            placeholder="qbittorrent.domain.com"
+                            onChange={(value: string) => setQbCreds({...qbCreds, "host": value})}
+                            value={qbCreds.host}
                         />
                     </div>
-                    <div className="col-span-1">
-                        <Label htmlFor="ip">
-                            Port
-                        </Label>
-                        <Input
-                            className="mt-2"
-                            name="port"
-                            type="number"
-                            placeholder="Client Port"
-                            onChange={handleQbPortChange}
-                            value={qbPort}
-                        />
-                    </div>
+                    <div className="md:col-span-1"></div>
                     <div className="md:col-span-2">
                         <Label htmlFor="username">
                             Username
@@ -204,9 +149,9 @@ const QBitorrent: Function = () => {
                             className="mt-2"
                             name="username"
                             type="text"
-                            placeholder="Client Username"
-                            onChange={handleQbUsernameChange}
-                            value={qbUsername}
+                            placeholder="admin"
+                            onChange={(value: string) => setQbCreds({...qbCreds, "username": value})}
+                            value={qbCreds.username}
                         />
                     </div>
                     <div className="md:col-span-2">
@@ -217,9 +162,9 @@ const QBitorrent: Function = () => {
                             className="mt-2"
                             name="password"
                             type="password"
-                            placeholder="Client Password"
-                            onChange={handleQbPasswordChange}
-                            value={qbPassword}
+                            placeholder="password"
+                            onChange={(value: string) => setQbCreds({...qbCreds, "password": value})}
+                            value={qbCreds.password}
                         />
                     </div>
                 </div>
