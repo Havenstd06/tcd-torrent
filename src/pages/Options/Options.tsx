@@ -20,6 +20,8 @@ const Options: FC<Props> = ({ title }: Props) => {
             <Trackers />
 
             <Clients />
+
+            <Others />
           </div>
         </div>
       </div>
@@ -162,6 +164,94 @@ const QBittorrent: Function = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Others: Function = () => {
+  return (
+      <div className="pt-4">
+        <h2 className="text-2xl font-medium">Style</h2>
+
+        <Style />
+      </div>
+  );
+}
+
+const Style: Function = () => {
+  const [message, setMessage] = useState<string>('');
+  const [style, setStyle] = useState({
+    iconUrl: '',
+  });
+
+  useEffect(() => {
+    chrome.storage.sync.get(['style'], (result) => {
+      if (
+          result.style.iconUrl
+      ) {
+        setStyle(result.style);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (style.iconUrl) {
+      if (! style.iconUrl.match(/^(http|https):\/\/[^ "]+$/)) {
+        setMessage('Value is not a valid URL');
+      } else {
+        checkIfImageExists(style.iconUrl, (exists: boolean) => {
+          if (! exists) {
+            setMessage('Image does not exist');
+          } else {
+            setMessage('');
+          }
+        })
+      }
+    }
+
+    chrome.storage.sync.set({ style: style }, () => {
+      // console.log('updated qbCreds');
+    });
+  }, [style]);
+
+  function checkIfImageExists(url: string, callback: Function) {
+    const img = new Image();
+    img.src = url;
+
+    if (img.complete) {
+      callback(true);
+    } else {
+      img.onload = () => {
+        callback(true);
+      };
+
+      img.onerror = () => {
+        callback(false);
+      };
+    }
+  }
+
+  return (
+      <div>
+        <div className="my-2">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-2">
+              <Label htmlFor="image-url">Icon URL (png, jpg, webp, gif)</Label>
+              <Input
+                  className="mt-2"
+                  name="image-url"
+                  type="url"
+                  placeholder="https://i.imgur.com/..."
+                  onChange={(value: string) => setStyle({ ...style, iconUrl: value })
+                  }
+                  value={style.iconUrl}
+              />
+            </div>
+          </div>
+          <div className="mt-3">
+            <p className="text-sm text-red-500">{message}</p>
+          </div>
+        </div>
+      </div>
   );
 };
 
