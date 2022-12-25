@@ -10,35 +10,25 @@
     "default_popup": "popup.html",
     "default_icon": "icon-34.png"
   },
-  "permissions": [
-    "storage",
-    "cookies",
-    "declarativeNetRequest"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["storage", "cookies", "declarativeNetRequest"],
+  "host_permissions": ["<all_urls>"],
   "declarative_net_request": {
-    "rule_resources": [{
-      "id": "ruleset_1",
-      "enabled": true,
-      "path": "net_rules.json"
-    }]
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "net_rules.json"
+      }
+    ]
   },
   "icons": {
     "128": "icon-128.png"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*.yggtorrent.lol/*"
-      ],
-      "js": [
-        "contentScript.bundle.js"
-      ],
-      "css": [
-        "content.styles.css"
-      ]
+      "matches": ["https://*.yggtorrent.lol/*"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["content.styles.css"]
     }
   ],
   "web_accessible_resources": [
@@ -49,9 +39,7 @@
         "icon-34.png",
         "logo.png"
       ],
-      "matches": [
-        "https://*.yggtorrent.lol/*"
-      ]
+      "matches": ["https://*.yggtorrent.lol/*"]
     }
   ]
 }
