@@ -201,14 +201,14 @@ const Style: Function = () => {
             setMessage('Image does not exist');
           } else {
             setMessage('');
+
+            chrome.storage.sync.set({ style: style }, () => {
+              // console.log('updated qbCreds');
+            });
           }
         });
       }
     }
-
-    chrome.storage.sync.set({ style: style }, () => {
-      // console.log('updated qbCreds');
-    });
   }, [style]);
 
   function checkIfImageExists(url: string, callback: Function) {
