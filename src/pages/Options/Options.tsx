@@ -208,6 +208,12 @@ const Style: Function = () => {
           }
         });
       }
+    } else {
+      setMessage('');
+
+      chrome.storage.sync.set({ style: style }, () => {
+        // console.log('updated qbCreds');
+      });
     }
   }, [style]);
 
