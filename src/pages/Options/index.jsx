@@ -6,7 +6,7 @@ import './index.css';
 import '../../styles/tailwind.css';
 
 render(
-  <Options title={'Settings'} />,
+  <Options title={'TCD Torrent'} />,
   window.document.querySelector('#app-container')
 );
 
