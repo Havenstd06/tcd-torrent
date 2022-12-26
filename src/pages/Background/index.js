@@ -35,17 +35,22 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
   }
 });
 
-async function addToClient(torrentId) {
-  const qbCreds = await getStoredQbCreds();
-  const creds = qbCreds.qbCreds;
+let creds = null;
 
-  if (!creds || !creds.host || !creds.username || !creds.password) {
+async function initQbCreds() {
+  const qbCreds = await getStoredQbCreds();
+
+  if (!qbCreds || !qbCreds.host || !qbCreds.username || !qbCreds.password) {
     return false;
   }
 
-  await qbitLogin(creds);
+  creds = qbCreds;
+}
 
-  console.log(creds)
+async function addToClient(torrentId) {
+  await initQbCreds();
+
+  await qbitLogin();
 
   await qbitAddTorrent(torrentId);
 
@@ -56,7 +61,7 @@ function getStoredQbCreds() {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(['qbCreds'], function (value) {
       if (value.qbCreds) {
-        resolve(value);
+        resolve(value.qbCreds);
       } else {
         reject();
 
@@ -93,8 +98,7 @@ function adjustHostURL(url) {
 }
 
 async function makeAPIURL(api, method) {
-  const creds = await getStoredQbCreds();
-  return `${adjustHostURL(creds.qbCreds.host)}/api/v2/${api}/${method}`;
+  return `${adjustHostURL(creds.host)}/api/v2/${api}/${method}`;
 }
 
 async function makeDownloadURL(torrentId) {
@@ -125,7 +129,7 @@ async function createSavePath(category) {
   return path + category;
 }
 
-async function qbitLogin(qbCreds) {
+async function qbitLogin() {
   await qbitLogout();
 
   const url = await makeAPIURL('auth', 'login');
@@ -136,8 +140,8 @@ async function qbitLogin(qbCreds) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      username: qbCreds.username,
-      password: qbCreds.password,
+      username: creds.username,
+      password: creds.password,
     }),
   });
 
@@ -154,7 +158,7 @@ async function qbitAddTorrent(torrentId) {
   const url = await makeAPIURL('torrents', 'add');
   const form = await downloadFileAsForm(link, 'torrents');
 
-  const savePath = await createSavePath('tcd-torrent');
+  const savePath = await createSavePath(creds.savePath ?? '');
   form.append('savepath', savePath);
 
   await fetch(url, {
@@ -165,11 +169,11 @@ async function qbitAddTorrent(torrentId) {
       if (res.status === 200) {
         console.log('added success');
       } else {
-        alert('Please set your credentials in the extension options');
+        console.log('added failed', res);
       }
     })
     .catch((err) => {
-      alert('Please set your credentials in the extension options');
+      console.log(err);
     });
 
   await qbitLogout();

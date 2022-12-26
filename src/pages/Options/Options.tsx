@@ -98,6 +98,7 @@ const QBittorrent: Function = () => {
     password: '',
     hdCategory: 'tcd-hd',
     fhdCategory: 'tcd-4k',
+    savePath: ''
   });
 
   useEffect(() => {
@@ -182,6 +183,19 @@ const QBittorrent: Function = () => {
                 setQbCreds({ ...qbCreds, fhdCategory: value })
               }
               value={qbCreds.fhdCategory}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="save-path">Save Path</Label>
+            <Input
+              className="mt-2"
+              name="save-path"
+              type="text"
+              placeholder="tcd-torrent"
+              onChange={(value: string) =>
+                setQbCreds({ ...qbCreds, savePath: value })
+              }
+              value={qbCreds.savePath}
             />
           </div>
         </div>
