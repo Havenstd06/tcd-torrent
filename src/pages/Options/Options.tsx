@@ -97,7 +97,7 @@ const QBittorrent: Function = () => {
     username: '',
     password: '',
     hdCategory: 'tcd-hd',
-    fhdCategory: 'tcd-4k',
+    uhdCategory: 'tcd-4k',
     savePath: ''
   });
 
@@ -173,16 +173,16 @@ const QBittorrent: Function = () => {
             />
           </div>
           <div className="md:col-span-2">
-            <Label htmlFor="fhd-category">4K Category</Label>
+            <Label htmlFor="uhd-category">4K/UHD Category</Label>
             <Input
               className="mt-2"
-              name="fhd-category"
+              name="uhd-category"
               type="text"
               placeholder="tcd-4k"
               onChange={(value: string) =>
-                setQbCreds({ ...qbCreds, fhdCategory: value })
+                setQbCreds({ ...qbCreds, uhdCategory: value })
               }
-              value={qbCreds.fhdCategory}
+              value={qbCreds.uhdCategory}
             />
           </div>
           <div className="md:col-span-2">
