@@ -20,6 +20,15 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
           message: 'Error adding torrent to qBittorrent',
         });
       }
+
+      qbitLogout().then(r => console.log('logged out'));
+    }).catch((e) => {
+        sendResponse({
+            success: false,
+            message: 'Error adding torrent to qBittorrent',
+        });
+
+        qbitLogout().then(r => console.log('logged out'));
     });
 
     return true;
@@ -35,6 +44,8 @@ async function addToClient(torrentId) {
   }
 
   await qbitLogin(creds);
+
+  console.log(creds)
 
   await qbitAddTorrent(torrentId);
 
@@ -115,6 +126,8 @@ async function createSavePath(category) {
 }
 
 async function qbitLogin(qbCreds) {
+  await qbitLogout();
+
   const url = await makeAPIURL('auth', 'login');
 
   const resp = await fetch(url, {
@@ -128,13 +141,11 @@ async function qbitLogin(qbCreds) {
     }),
   });
 
-  if (!resp.ok || (await resp.text()) === 'Fails.') {
-    const error = new Error(`HTTP error: ${resp.status}`);
-    error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
-    throw error;
-  }
+  return !(!resp.ok || (await resp.text()) === 'Fails.');
+}
 
-  return true;
+function qbitLogout() {
+  return postAPI('auth', 'logout');
 }
 
 async function qbitAddTorrent(torrentId) {
@@ -161,7 +172,7 @@ async function qbitAddTorrent(torrentId) {
       alert('Please set your credentials in the extension options');
     });
 
-  await postAPI('auth', 'logout');
+  await qbitLogout();
 
   return true;
 }
