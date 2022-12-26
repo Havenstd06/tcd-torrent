@@ -1,11 +1,14 @@
 let windowLocation = null;
 
 chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
-  if (req.torrentId) {
+  if (req.torrentId && req.torrentName) {
     windowLocation = req.windowLocation;
 
-    addToClient(req.torrentId).then((r) => {
-      console.log(r);
+    addToClient({
+        id: req.torrentId,
+        name: req.torrentName,
+    }).then((r) => {
+      // console.log(r);
 
       if (r) {
         sendResponse({
@@ -45,14 +48,18 @@ async function initQbCreds() {
   }
 
   creds = qbCreds;
+
+  // console.log('creds added', creds);
 }
 
-async function addToClient(torrentId) {
+async function addToClient(torrent) {
+  // console.log('adding torrent', torrent);
+
   await initQbCreds();
 
   await qbitLogin();
 
-  await qbitAddTorrent(torrentId);
+  await qbitAddTorrent(torrent);
 
   return true;
 }
@@ -120,13 +127,27 @@ function fetchJSON(api, method) {
   return fetchAPI(api, method).then((r) => r.json());
 }
 
-async function createSavePath(category) {
+async function createSavePath(savePath) {
+  // console.log('creating savePath', savePath);
+
   const prefs = await fetchJSON('app', 'preferences');
   let path = prefs.save_path;
 
   if (!path.endsWith('/') && !path.endsWith('\\')) path += '/';
 
-  return path + category;
+  return path + savePath;
+}
+
+async function createCategory(torrentName) {
+  // console.log('creating category', torrentName);
+
+  let category = creds.hdCategory;
+
+  if (torrentName.match(/4k|4K|uhd|UHD|2160p/gi)) {
+    category = creds.uhdCategory;
+  }
+
+  return category;
 }
 
 async function qbitLogin() {
@@ -145,6 +166,7 @@ async function qbitLogin() {
     }),
   });
 
+  console.log('logged in');
   return !(!resp.ok || (await resp.text()) === 'Fails.');
 }
 
@@ -152,14 +174,19 @@ function qbitLogout() {
   return postAPI('auth', 'logout');
 }
 
-async function qbitAddTorrent(torrentId) {
-  const link = await makeDownloadURL(torrentId);
+async function qbitAddTorrent(torrent) {
+  const link = await makeDownloadURL(torrent.id);
 
   const url = await makeAPIURL('torrents', 'add');
   const form = await downloadFileAsForm(link, 'torrents');
 
   const savePath = await createSavePath(creds.savePath ?? '');
   form.append('savepath', savePath);
+
+  const category = await createCategory(torrent.name);
+  form.append('category', category);
+
+  // console.log('adding torrent', torrent.name, 'to', savePath, 'with category', category);
 
   await fetch(url, {
     method: 'POST',

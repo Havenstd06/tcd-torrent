@@ -30,6 +30,8 @@ function addDownloadButton(style) {
       if (isTorrentTable) {
         const torrentId =
           headerRow[r].cells[2].children[0].getAttribute('target') ?? null;
+        const torrentName =
+          headerRow[r].cells[1].children[0].innerHTML ?? null;
 
         const cell = headerRow[r].cells[1];
 
@@ -38,6 +40,7 @@ function addDownloadButton(style) {
           chrome.runtime.sendMessage(
             {
               torrentId: torrentId,
+              torrentName: torrentName,
               windowLocation: window.location,
             },
             function (res) {

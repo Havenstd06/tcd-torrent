@@ -1,6 +1,6 @@
 {
   "name": "tcd-torrent",
-  "version": "0.1",
+  "version": "0.1.1",
   "description": "Tracker Client Tracker Torrent",
   "license": "MIT",
   "repository": {
