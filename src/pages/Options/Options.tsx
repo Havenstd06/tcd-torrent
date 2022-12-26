@@ -8,10 +8,14 @@ interface Props {
 }
 
 const Options: FC<Props> = ({ title }: Props) => {
+  useEffect(() => {
+    document.body.classList.add('bg-primary', 'text-white');
+  }, []);
+
   return (
     <div className={`h-screen bg-primary text-white`}>
-      <div className="md:flex items-center justify-center h-full">
-        <div className="max-w-4xl w-full bg-secondary p-4 rounded-md shadow-lg">
+      <div className="md:flex items-center justify-center h-full my-4">
+        <div className="max-w-4xl w-full bg-secondary px-4 py-2 rounded-md shadow-lg">
           <div className="pb-2 border-b border-gray-200">
             <h1 className="text-2xl font-semibold tracking-wide">{title}</h1>
           </div>
@@ -41,21 +45,18 @@ const Trackers: Function = () => {
 
 const Yggtorrent: Function = () => {
   const [yggPasskey, setYggPasskey] = useState<string>('');
-  const handleYggPasskeyChange: Function = (value: string) => {
-    if (!value && value.length <= 0) {
-      return;
-    }
-
-    chrome.storage.sync.set({ yggPasskey: value }, () => {
-      setYggPasskey(value);
-    });
-  };
 
   useEffect(() => {
     chrome.storage.sync.get(['yggPasskey'], (result) => {
-      setYggPasskey(result.yggPasskey);
+      if (result.yggPasskey) {
+        setYggPasskey(result.yggPasskey);
+      }
     });
   }, []);
+
+  useEffect(() => {
+    chrome.storage.sync.set({ yggPasskey: yggPasskey }, () => {});
+  }, [yggPasskey]);
 
   return (
     <div>
@@ -70,7 +71,7 @@ const Yggtorrent: Function = () => {
               name="ygg-passkey"
               type="password"
               placeholder="YGGTorrent Passkey"
-              onChange={handleYggPasskeyChange}
+              onChange={(value: string) => setYggPasskey(value)}
               value={yggPasskey}
             />
           </div>
@@ -95,24 +96,20 @@ const QBittorrent: Function = () => {
     host: '',
     username: '',
     password: '',
+    hdCategory: 'tcd-hd',
+    fhdCategory: 'tcd-4k',
   });
 
   useEffect(() => {
     chrome.storage.sync.get(['qbCreds'], (result) => {
-      if (
-        result.qbCreds.host ||
-        result.qbCreds.username ||
-        result.qbCreds.password
-      ) {
+      if (result.qbCreds) {
         setQbCreds(result.qbCreds);
       }
     });
   }, []);
 
   useEffect(() => {
-    chrome.storage.sync.set({ qbCreds: qbCreds }, () => {
-      // console.log('updated qbCreds');
-    });
+    chrome.storage.sync.set({ qbCreds: qbCreds }, () => {});
   }, [qbCreds]);
 
   return (
@@ -161,6 +158,32 @@ const QBittorrent: Function = () => {
               value={qbCreds.password}
             />
           </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="hd-category">HD Category</Label>
+            <Input
+              className="mt-2"
+              name="hd-category"
+              type="text"
+              placeholder="tcd-hd"
+              onChange={(value: string) =>
+                setQbCreds({ ...qbCreds, hdCategory: value })
+              }
+              value={qbCreds.hdCategory}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <Label htmlFor="fhd-category">4K Category</Label>
+            <Input
+              className="mt-2"
+              name="fhd-category"
+              type="text"
+              placeholder="tcd-4k"
+              onChange={(value: string) =>
+                setQbCreds({ ...qbCreds, fhdCategory: value })
+              }
+              value={qbCreds.fhdCategory}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -185,7 +208,7 @@ const Style: Function = () => {
 
   useEffect(() => {
     chrome.storage.sync.get(['style'], (result) => {
-      if (result.style.iconUrl) {
+      if (result.style) {
         setStyle(result.style);
       }
     });
