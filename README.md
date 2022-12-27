@@ -10,6 +10,20 @@ In addition to its convenience, this extension is also very fast and efficient, 
 
 *More client and tracker will be added in the future.
 
+## Build
+
+To build this project run
+
+```bash
+  npm run install
+```
+
+```bash
+  npm run build
+```
+
+Then retrieve the contents of the folder and insert it into the chrome extension settings.
+
 
 ## Add to Chrome Web Store
 
