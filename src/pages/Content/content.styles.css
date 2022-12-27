@@ -64,3 +64,32 @@
   outline: none;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
 }
+
+.tcd-butt {
+  margin-left: 10px;
+  max-width: 100%;
+  color: #ffffff!important;
+  background: #5A3DB7;
+  top: -1px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 3px solid #3c297b;
+  border-radius: 25px;
+  padding: 5px 10px;
+  text-decoration: none!important;
+}
+
+.tcd-butt:hover {
+  background: #3c297b;
+  border: 3px solid #5A3DB7;
+  text-decoration: none;
+}
+
+.tcd-butt-icon {
+  margin-left: 5px;
+  width: 17px;
+  height: 17px;
+  display: inline-block;
+  border-radius: 9999px;
+}

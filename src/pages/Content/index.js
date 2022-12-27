@@ -18,9 +18,25 @@ chrome.storage.sync.get(['yggPasskey'], async function (value) {
 });
 
 function addDownloadButton(style) {
+  tableDownloadButton(style);
+
+  detailPageDownloadButton(style);
+}
+
+function tableDownloadButton(style) {
   const tables = document.getElementsByTagName('table');
 
+  if (tables.length === 0) {
+    return false;
+  }
+
   for (let t = 0; t < tables.length; t++) {
+    const thead = tables[t].querySelector('thead');
+
+    if (!thead || thead.querySelector('tr > th:nth-child(1)').innerHTML !== 'Type') {
+      return false;
+    }
+
     const tbody = tables[t].querySelector('tbody');
     const headerRow = tbody.querySelectorAll('tr');
 
@@ -29,49 +45,19 @@ function addDownloadButton(style) {
 
       if (isTorrentTable) {
         const torrentId =
-          headerRow[r].cells[2].children[0].getAttribute('target') ?? null;
+            headerRow[r].cells[2].children[0].getAttribute('target');
         const torrentName =
-          headerRow[r].cells[1].children[0].innerHTML ?? null;
+            headerRow[r].cells[1].children[0].innerHTML;
 
         const cell = headerRow[r].cells[1];
 
         const downloadButton = document.createElement('a');
-        downloadButton.onclick = () => {
-          chrome.runtime.sendMessage(
-            {
-              torrentId: torrentId,
-              torrentName: torrentName,
-              windowLocation: window.location,
-            },
-            function (res) {
-              if (res) {
-                if (res.success) {
-                  new Toast({
-                    message: res.message,
-                    type: 'success',
-                  });
-                } else {
-                  new Toast({
-                    message: res.message,
-                    type: 'danger',
-                  });
-                }
-
-                return true;
-              }
-
-              new Toast({
-                message: "Extension error, please check the console's logs",
-                type: 'danger',
-              });
-            }
-          );
-        };
+        downloadButton.onclick = () => callBackgroundScript(torrentId, torrentName);
         const downloadIcon = document.createElement('img');
         downloadIcon.setAttribute('src', style.iconUrl);
         downloadIcon.setAttribute(
-          'style',
-          'margin-right: 10px;width: 25px;height: 25px;display: inline-block;border-radius: 9999px;'
+            'style',
+            'margin-right: 10px;width: 25px;height: 25px;display: inline-block;border-radius: 9999px;'
         );
 
         downloadButton.appendChild(downloadIcon);
@@ -79,6 +65,31 @@ function addDownloadButton(style) {
       }
     }
   }
+}
+
+function detailPageDownloadButton(style) {
+  const splitUrl = window.location.href.split('/');
+  const torrentId = splitUrl[splitUrl.length - 1].split('-')[0];
+  const torrentName = document.querySelector('#title > h1').innerHTML;
+
+  const row = document.querySelector('#middle > main > div > div > section:nth-child(3) > div > table > tbody > tr:nth-child(1) > td:nth-child(2)');
+
+  if (!row) {
+    return false;
+  }
+
+  const downloadButton = document.createElement('a');
+  downloadButton.classList.add('tcd-butt');
+  downloadButton.innerHTML = 'Télécharger avec TCD Torrent';
+
+  const downloadIcon = document.createElement('img');
+  downloadIcon.setAttribute('src', style.iconUrl);
+  downloadIcon.classList.add('tcd-butt-icon');
+
+  downloadButton.onclick = () => callBackgroundScript(torrentId, torrentName);
+
+  downloadButton.appendChild(downloadIcon);
+  row.append(downloadButton);
 }
 
 function getStoredStyle() {
@@ -93,4 +104,36 @@ function getStoredStyle() {
       }
     });
   });
+}
+
+function callBackgroundScript(torrentId, torrentName) {
+  chrome.runtime.sendMessage(
+      {
+        torrentId: torrentId,
+        torrentName: torrentName,
+        windowLocation: window.location,
+      },
+      function (res) {
+        if (res) {
+          if (res.success) {
+            new Toast({
+              message: res.message,
+              type: 'success',
+            });
+          } else {
+            new Toast({
+              message: res.message,
+              type: 'danger',
+            });
+          }
+
+          return true;
+        }
+
+        new Toast({
+          message: "Extension error, please check the console's logs",
+          type: 'danger',
+        });
+      }
+  );
 }
