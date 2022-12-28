@@ -34,7 +34,7 @@ function tableDownloadButton(style) {
     const thead = tables[t].querySelector('thead');
 
     if (!thead || thead.querySelector('tr > th:nth-child(1)').innerHTML !== 'Type') {
-      return false;
+      continue;
     }
 
     const tbody = tables[t].querySelector('tbody');
