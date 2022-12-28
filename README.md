@@ -25,9 +25,9 @@ To build this project run
 Then retrieve the contents of the folder and insert it into the chrome extension settings.
 
 
-## Add to Chrome Web Store
+## Chrome Web Store
 
-[//]: # ([![Add to Chrome Web Store]&#40;https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png&#41;]&#40;https://chrome.google.com/webstore/detail/tcd-torrent/&#41;)
+[//]: # ([![Chrome Web Store]&#40;https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png&#41;]&#40;https://chrome.google.com/webstore/detail/tcd-torrent/&#41;)
 
 
 
