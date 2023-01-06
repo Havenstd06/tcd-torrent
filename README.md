@@ -27,8 +27,8 @@ Then retrieve the contents of the folder and insert it into the chrome extension
 
 ## Chrome Web Store
 
-[//]: # ([![Chrome Web Store]&#40;https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png&#41;]&#40;https://chrome.google.com/webstore/detail/tcd-torrent/&#41;)
 
+[Download Here](https://chrome.google.com/webstore/detail/tcd-torrent/khhofakagmjlolaepeocgniigdkdghjc)
 
 
 ## Contributing
