@@ -31,7 +31,23 @@
       "matches": [
         "https://*.ygg.re/*",
         "https://*.yggtorrent.top/*",
-        "https://*.yggtorrent.li/*"
+        "https://*.yggtorrent.li/*",
+        "https://*.yggtorrent.cool/*",
+        "https://*.yggtorrent.qa/*",
+        "https://*.yggtorrent.wtf/*",
+        "https://*.yggtorrent.lol/*",
+        "https://*.yggtorrent.fi/*",
+        "https://*.yggtorrent.la/*",
+        "https://*.yggtorrent.re/*",
+        "https://*.yggtorrent.nz/*",
+        "https://*.yggtorrent.si/*",
+        "https://*.yggtorrent.se/*",
+        "https://*.yggtorrent.pe/*",
+        "https://*.yggtorrent.ch/*",
+        "https://*.yggtorrent.gg/*",
+        "https://*.ygg.to/*",
+        "https://*.yggtorrent.to/*",
+        "https://*.yggtorrent.is/*"
       ],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
@@ -48,7 +64,23 @@
       "matches": [
         "https://*.ygg.re/*",
         "https://*.yggtorrent.top/*",
-        "https://*.yggtorrent.li/*"
+        "https://*.yggtorrent.li/*",
+        "https://*.yggtorrent.cool/*",
+        "https://*.yggtorrent.qa/*",
+        "https://*.yggtorrent.wtf/*",
+        "https://*.yggtorrent.lol/*",
+        "https://*.yggtorrent.fi/*",
+        "https://*.yggtorrent.la/*",
+        "https://*.yggtorrent.re/*",
+        "https://*.yggtorrent.nz/*",
+        "https://*.yggtorrent.si/*",
+        "https://*.yggtorrent.se/*",
+        "https://*.yggtorrent.pe/*",
+        "https://*.yggtorrent.ch/*",
+        "https://*.yggtorrent.gg/*",
+        "https://*.ygg.to/*",
+        "https://*.yggtorrent.to/*",
+        "https://*.yggtorrent.is/*"
       ]
     }
   ]
