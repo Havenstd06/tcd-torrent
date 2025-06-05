@@ -28,7 +28,10 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.ygg.re/*"],
+      "matches": [
+        "https://*.ygg.re/*",
+        "https://*.yggtorrent.top/*"
+      ],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
     }
@@ -41,7 +44,10 @@
         "icon-34.png",
         "logo.png"
       ],
-      "matches": ["https://*.ygg.re/*"]
+      "matches": [
+        "https://*.ygg.re/*",
+        "https://*.yggtorrent.top/*"
+      ]
     }
   ]
 }
