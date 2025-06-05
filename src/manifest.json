@@ -30,7 +30,8 @@
     {
       "matches": [
         "https://*.ygg.re/*",
-        "https://*.yggtorrent.top/*"
+        "https://*.yggtorrent.top/*",
+        "https://*.yggtorrent.li/*"
       ],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
@@ -46,7 +47,8 @@
       ],
       "matches": [
         "https://*.ygg.re/*",
-        "https://*.yggtorrent.top/*"
+        "https://*.yggtorrent.top/*",
+        "https://*.yggtorrent.li/*"
       ]
     }
   ]
